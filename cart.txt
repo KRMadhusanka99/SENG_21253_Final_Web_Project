@@ -1,0 +1,26 @@
+
+function update_cart_item(){
+    global $con;
+    if(isset($_POST['update_cart'])){
+        $get_ip_address = getIPAddress(); 
+
+        $cart_query="select * from cart_details where ip_address='$get_ip_address'";
+        $result=mysqli_query($con,$cart_query);
+        $result_count=mysqli_num_rows($result);
+        $i=0;
+        $quantities=$_POST['qty'];
+        while($row=mysqli_fetch_array($result)){
+            $product_id=$row['product_id'];
+            $update_cart="update cart_details set quantity=$quantities[$i] where ip_address='$get_ip_address' and product_id=$product_id";
+            $result_products_quantity=mysqli_query($con,$update_cart);
+            $get_price="Select * form products where product_id=$product_id";
+            $price_query=mysqli_query($con,$get_price);
+            $row_price=mysqli_fetch_array($price_query);
+            $product_price=$row_price['product_price'];
+            $product_price=$product_price*$quantities[$i];
+            $total_price=$product_price;
+            $i++;                 
+        }
+    }
+}
+echo $remove_item = update_cart_item();
